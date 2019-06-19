@@ -235,6 +235,11 @@ $("#attack").on("click", function() {
             renderMessage(counterAttackMessage);
             currentlySelectedCharacter.health -= currentDefender.enemyAttackBack;
             renderCharacters(currentlySelectedCharacter, "enemyDamage");
+            if (currentlySelectedCharacter.health <= 0) {
+                renderMessage("clearMessage");
+                restartGame("You Lost!");
+                $("#attack").unbind("click");
+            }
         }
 
         else {
