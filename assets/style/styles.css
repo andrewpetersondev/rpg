@@ -1,0 +1,35 @@
+body {
+    font-family: 'Heebo', Arial, Helvetica, sans-serif;
+}
+
+.section-title {
+    background-color: bisque;
+}
+
+img {
+    height: 100px;
+    width: 150px;
+    border-radius: 10px;
+}
+
+.character {
+    display: inline-block;
+    border-style: solid;
+    border-color: red;
+    border-width: 3px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.character-image {
+    padding: 16px;
+    margin: 5px;
+}
+
+.character-name {
+    text-align: center;
+}
+
+.character-health {
+    text-align: center;
+}
