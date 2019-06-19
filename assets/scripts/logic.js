@@ -37,127 +37,136 @@ var characters = {
         attack: 15,
         imageURL: "./assets/images/sir-bronn.jpeg",
         enemyAttackBack: 20
-    },
-}
+    }
+};
 
 var currentlySelectedCharacter;
 var combatants = [];
-
-// testing and debugging
-// console.log(characters);
-// console.log(characters[0]); // returns undefined 
-// console.log(characters["Night King"]); // returns object associated with key // this case has "Night King" as the key
+var currentDefender;
+var turnCounter = 1;
+var killCount = 0;
 
 // Functions 
 // ====================================================================================================================================
 
-// this function will render a character card to the page
-// the character rendered and the area they are rendered too
-var renderOne = function (character, renderArea) {
-
-    // console.log(" ==================== renderOne ====================");
-    // console.log(character);
-
+var renderOne = function (character, renderArea, charStatus) {
+    // console.log("==================== renderOne ====================");
+    // console.log(character, renderArea);
     // dynamically create html content for one character
     var charDiv = $("<div class='character' data-name='" + character.name + "'>");
     var charName = $("<div class='character-name'>").text(character.name);
     var charImage = $("<img alt='image' class='character-image'>").attr("src", character.imageURL);
     var charHealth = $("<div class='character-health'>").text(character.health);
-
     // append name, image, and health to character div
     charDiv.append(charName).append(charImage).append(charHealth);
-
     // append character div to render area
     $(renderArea).append(charDiv);
 
-    // testing and debugging
-    // console.log(charDiv);
-    // console.log(charName);
-    // console.log(charImage);
-    // console.log(charHealth);
-    // console.log(characters);
-    // console.log(characters["Jon Snow"]);
-    // console.log(character, renderArea);
-    // console.log(character);
-    // console.log(character.name);
-    // console.log(character.health);
-
+    // if the character is an enemy or defender (the active opponent), add the 
+    if (charStatus === "enemy") {
+        $(charDiv).addClass("enemy");
+    }
+    else if (charStatus === "defender") {
+        // populate current defender with info
+        currentDefender = character;
+        $(charDiv).addClass("target-enemy");
+    }
 };
+
+var renderMessage = function(message) {
+    var gameMessageSet = $("#message");
+    var newMessage = $("<div>").text(message);
+    gameMessageSet.append(newMessage);
+    if (message === "clearMessage") {
+        gameMessageSet.text("");
+    }
+}
 
 // function that handles the rendering of characters based on which section they are supposed to appear in
 var renderCharacters = function (charObj, areaRender) {
-    console.log(charObj.length);
-
     // console.log("==================== renderCharacters ====================");
-
+    // console.log(charObj, areaRender);
+    // console.log(charObj.length);
     // "#characters" is the div where all of the characters appear at the start of the game
     // if true, render all characters to the starting area
     if (areaRender === "#characters") {
-
         $(areaRender).empty();
-
         // The for...in statement iterates over all non-Symbol, enumerable properties of an object.
         // enumerable means 
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Enumerability_and_ownership_of_properties
         // loop through the characters object and call renderOne 
-
         for (var key in charObj) {
-
             // console.log(key);
-
             if (charObj.hasOwnProperty(key)) {
-
-                renderOne(charObj[key], areaRender);
-
-                // testing and debugging
-                // console.log(charObj);
-                // console.log(charObj[key]);
+                renderOne(charObj[key], areaRender, "");
+            }
+        }
+    }
+    // "#user-character" is the div where our character appears
+    // if true render the user character to this area
+    if (areaRender === "#user-character") {
+        renderOne(charObj, areaRender, "");
+    }
+    // "#enemies" is the div that holds all of your enemies
+    // if true, render enemies to this area
+    if (areaRender === "#enemies") {
+        // loop through the combatants array and call renderOne to display all enemies in this section
+        for (var i = 0; i < charObj.length; i++) {
+            // console.log(charObj[i]);
+            renderOne(charObj[i], areaRender, "enemy");
+        }
+        // creates an on click event for each enemy
+        $(document).on("click", ".enemy", function () {
+            var name = ($(this).attr("data-name"));
+            // if there is no defender, the clicked enemy will become the defender
+            if ($("#defender").children().length === 0) {
+                renderCharacters(name, "#defender");
+                $(this).hide();
+                renderMessage("clearMessage");
+            }
+        });
+    }
+    // "#defender" is the div where the active opponent appears
+    // if true render the area
+    if (areaRender === "#defender") {
+        $(areaRender).empty();
+        for (var i = 0; i < combatants.length; i++) {
+            if (combatants[i].name === charObj) {
+                renderOne(combatants[i], areaRender, "defender");
             }
         }
     }
 
-    // "#user-character" is the div where our character appears
-    // if true render the user character to this area
-    if (areaRender === "#user-character") {
-
-        // console.log(charObj);
-
-        renderOne(charObj, areaRender);
-
-        // testing and debugging
-        // console.log(charObj, areaRender);
-        // console.log(charObj);
-        // console.log(areaRender);
-
-
+    if (areaRender === "playerDamage") {
+        $("#defender").empty();
+        renderOne(charObj, "#defender", "defender");
     }
 
-    // "#enemy" is the div that holds all of your enemies
-    // if true, render enemies to this area
-    if (areaRender === "#enemy") {
-
-        // loop through the combatants array and call renderOne to display all enemies in this section
-        for (var i = 0; combatants.length; i++) {
-
-            renderOne(charObj[i], areaRender);
-
-            // testing and debugging
-            // console.log(charObj);
-            // console.log(charObj[i]);
-            // console.log(areaRender);
-
-        }
-
-        // testing and debugging
-        // console.log("does this line run?");
+    if (areaRender === "enemyDamage") {
+        $("#user-character").empty();
+        renderOne(charObj, "#user-character", "");
     }
 
-    // testing and debugging
-    // console.log();
-
+    if (areaRender === "enemyDefeated") {
+        $("#defender").empty();
+        var gameStateMessage = "You have defeated " + charObj.name + ", you can now choose to fight another character.";
+        renderMessage(gameStateMessage);
+    }
 
 };
 
+var restartGame = function(inputEndGame) {
+
+    var restart = $("<button>restart</button>").click(function() {
+        location.reload();
+    });
+
+    var gameState = $("<div>").text(inputEndGame);
+
+    $("body").append(gameState);
+    $("body").append(restart);
+
+};
 
 // Main Processes
 // ===================================================================================================================================================
@@ -167,7 +176,6 @@ renderCharacters(characters, "#characters");
 
 // click a character image
 $(document).on("click", ".character", function () {
-
     // log button click
     // console.log(this);
 
@@ -182,40 +190,65 @@ $(document).on("click", ".character", function () {
         currentlySelectedCharacter = characters[name];
         // console.log(currentlySelectedCharacter);
 
+        // The for...in statement iterates over all non-Symbol, enumerable properties of an object.
+        // var obj = {property1 : value1, property2 : value2, etc}
+        // var obj = {key1 : value1, key2 : value2, etc}
+        // for this program 
+        // var characters = {"Jon Snow" : {value}, "Night King" : {value}, etc}
+        // meaning that key refers to "Jon Snow", "Night King", etc
+
         // loop through the remaining characters
         for (var key in characters) {
-
             // console.log(key); // do not delete
-
+            // console.log(characters[key]); // do not delete
             if (key !== name) {
-
+                // combatants.push(key); // we do not use this because we would lose all the object data
                 combatants.push(characters[key]);
-
             }
+        }
+        // console.log(combatants);
+    }
 
+    // // hide the section that displays all characters
+    $("#characters").hide();
+
+    // // render our selected character and combatants
+    renderCharacters(currentlySelectedCharacter, "#user-character");
+    renderCharacters(combatants, "#enemies");
+
+});
+
+// attack button 
+$("#attack").on("click", function() {
+
+    if ($("#defender").children().length !== 0) {
+
+        var attackMessage = "You attacked " + currentDefender.name + " for " + (currentlySelectedCharacter.attack * turnCounter) + " damage.";
+        var counterAttackMessage = currentDefender.name + " attacked you  back for " + currentDefender.enemyAttackBack + " damage.";
+        renderMessage("clearMessage");
+
+        currentDefender.health -= (currentlySelectedCharacter.attack * turnCounter);
+
+        if (currentDefender.health > 0) {
+            renderCharacters(currentDefender, "playerDamage");
+            renderMessage(attackMessage);
+            renderMessage(counterAttackMessage);
+            currentlySelectedCharacter.health -= currentDefender.enemyAttackBack;
+            renderCharacters(currentlySelectedCharacter, "enemyDamage");
         }
 
-        // testing and debugging
-        // console.log(combatants);
-        // console.log(combatants[0]);
-        // console.log(combatants[0].name);
+        else {
+            renderCharacters(currentDefender, "enemyDefeated");
+            killCount++;
+            if(killCount >= 4) {
+                renderMessage("clearMessage");
+                restartGame("You won. Game over!");
+            }
+        }
 
     }
 
-    // hide the section that displays all characters
-    $("#characters").hide();
-
-    // console.log(currentlySelectedCharacter);
-
-
-    // render our selected character
-    renderCharacters(currentlySelectedCharacter, "#user-character");
-
-    // console.log(combatants);
-
-    // render our combatants
-    renderCharacters(combatants, "#enemy");
-
+turnCounter++;
 
 
 });

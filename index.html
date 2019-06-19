@@ -28,19 +28,19 @@
             <h1>Fight on!</h1>
         </div>
 
-        <!-- row 1 your character-->
+        <!-- row 1 -->
         <div class="row">
             <!-- column -->
             <div class="col-12">
                 <!-- section to display all characters -->
-                <div id="character-selection" class="section">
+                <div id="characters-section" class="section">
                     <div class="section-title">select your character </div>
                     <div id="characters">characters</div>
                 </div>
                 <!-- section to display user character -->
                 <div class="section">
                     <div class="section-title">your character</div>
-                    <div id="user-character">display your character here</div>
+                    <div id="user-character"></div>
                 </div>
             </div>
         </div>
@@ -49,26 +49,28 @@
         <div class="row">
             <div class="col-12">
                 <!-- section to display enemies available to attack -->
-                <div id="enemies-to-attack" class="section">
+                <div id="available-to-attack-section" class="section">
                     <div class="section-title">enemies available to attack</div>
-                    <div id="enemy">enemy</div>
+                    <div id="enemies"></div>
                 </div>
             </div>
         </div>
 
         <!-- row 3 fight section -->
         <div class="row">
-            <button id="attack">attack!</button>
             <div class="col-12">
                 <!-- section to display fight -->
                 <div class="section">
-                    <div class="section-title">fight to the death</div>
-                    <div id="fight">fight</div>
+                    <div class="section-title">fight section</div>
+                    <div id="fight-section">
+                        <button id="attack">attack!</button>
+                    </div>
                 </div>
+
                 <!-- section to display current defender -->
-                <div class="section">
-                    <div class="section-title">current defender</div>
-                    <div id="defender">current defender</div>
+                <div id="action" class="section">
+                    <div class="section-title">defender</div>
+                    <div id="defender"></div>
                 </div>
             </div>
         </div>

@@ -2,6 +2,10 @@ body {
     font-family: 'Heebo', Arial, Helvetica, sans-serif;
 }
 
+.jumbotron {
+    background-image: url("../images/got-background.jpg");
+}
+
 .section-title {
     background-color: bisque;
 }
