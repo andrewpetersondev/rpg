@@ -56,6 +56,23 @@ The purpose of this project is to practice using jQuery.
 
 - Your players should be able to win and lose the game no matter what character they choose. The challenge should come from picking the right enemies, not choosing the strongest player.
 
+## My Notes
+
+```javascript
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Enumerability_and_ownership_of_properties
+
+// The for...in statement iterates over all non-Symbol, enumerable properties of an object.
+
+// var obj = {property1 : value1, property2 : value2, etc}
+// var obj = {key1 : value1, key2 : value2, etc}
+
+// for this program
+// var characters = {"Jon Snow" : {value}, "Night King" : {value}, etc}
+// meaning that key refers to "Jon Snow", "Night King", etc
+
+```
+
 ## Status
 
 In Progress.
