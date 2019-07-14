@@ -3,10 +3,10 @@
 
 /*
 var object = {
-    key : value,
+    key : {values},
+    key2 : {values}
 }
 */
-
 
 var characters = {
     "Jon Snow": {
@@ -52,7 +52,7 @@ var currentDefender;
 var turnCounter = 1;
 var killCount = 0;
 
-console.log(characters);
+// console.log(characters);
 
 // Functions 
 // ====================================================================================================================================
@@ -61,80 +61,98 @@ var renderOne = function (character, renderArea, charStatus) {
 
     // div that contains individual character
     var charDiv = $("<div class='character' data-name='" + character.name + "'>");
-    // nested div that holds individual character name
+
+    // character name 
     var charName = $("<div class='character-name'>").text(character.name);
-    // nested div that holds individual character image
+
+    // character image
     var charImage = $("<img alt='image' class='character-image'>").attr("src", character.imageURL);
-    // nested div that holds individual character health
+
+    // character health
     var charHealth = $("<div class='character-health'>").text(character.health);
 
-    // chain appends to put all individual character information in container div
+    // chain appends to put all individual character information in character's container div
     charDiv.append(charName).append(charImage).append(charHealth);
-    
+
+    // use jquery to target renderArea and append charDiv
     $(renderArea).append(charDiv);
 
+    // run when renderOne is called with charStatus of "enemy"
     if (charStatus === "enemy") {
         $(charDiv).addClass("enemy");
     }
+    // run when renderOne is called with charStatus of "defender"
     else if (charStatus === "defender") {
+        // set currentDefender
         currentDefender = character;
+        // add class to currentDefender
         $(charDiv).addClass("target-enemy");
     }
 
 };
 
 var renderMessage = function (message) {
-
     var gameMessageSet = $("#message");
     var newMessage = $("<div>").text(message);
-
     gameMessageSet.append(newMessage);
-
     if (message === "clearMessage") {
         gameMessageSet.text("");
     }
-
 };
 
 var renderCharacters = function (charObj, areaRender) {
-
+    // is this necessary?
     // $(areaRender).empty();
 
+    // render $("#characters")
     if (areaRender === "#characters") {
+        // empty 
         $(areaRender).empty();
+        // loop through characters object and call renderOne on each key
         for (var key in charObj) {
+            // 
             if (charObj.hasOwnProperty(key)) {
+                //
                 renderOne(charObj[key], areaRender, "");
             }
         }
     }
 
+    // render $("#user-character")
     if (areaRender === "#user-character") {
+        // empty
         $(areaRender).empty();
+        // call renderOne fill user-character div with character object
         renderOne(charObj, areaRender, "");
     }
 
+    // render $("#enemies")
     if (areaRender === "#enemies") {
+        // empty
         $(areaRender).empty();
-
+        // loop
         for (var i = 0; i < charObj.length; i++) {
             renderOne(charObj[i], areaRender, "enemy");
         }
 
+        // click event for each enemy
         $(document).on("click", ".enemy", function () {
+            // save name of enemy clicked
             var name = ($(this).attr("data-name"));
+            // run if a defender has not been chosen from enemies
             if ($("#defender").children().length === 0) {
                 renderCharacters(name, "#defender");
+                // hide enemy from enemies display?
                 $(this).hide();
                 renderMessage("clearMessage");
             }
         });
     }
 
+    // render $("#defender")
     if (areaRender === "#defender") {
         $(areaRender).empty();
         for (var i = 0; i < combatants.length; i++) {
-
             if (combatants[i].name === charObj) {
                 renderOne(combatants[i], areaRender, "defender");
             }
@@ -142,16 +160,19 @@ var renderCharacters = function (charObj, areaRender) {
 
     }
 
+    // render $("#playerDamage")
     if (areaRender === "playerDamage") {
         $("#defender").empty();
         renderOne(charObj, "#defender", "defender");
     }
 
+    // render $("#enemyDamage")
     if (areaRender === "enemyDamage") {
         $("#user-character").empty();
         renderOne(charObj, "#user-character", "");
     }
 
+    // render $("#enemyDefeated")
     if (areaRender === "enemyDefeated") {
         $("#defender").empty();
         var gameStateMessage = "You have defeated " + charObj.name + ", you can now choose to fight another character.";
@@ -174,7 +195,7 @@ var restartGame = function (inputEndGame) {
 // this function is run when the page is loaded to display all characters
 renderCharacters(characters, "#characters");
 
-// user clicks on a character to select their character and/or the current defender
+// user clicks on a character to select their character
 $(document).on("click", ".character", function () {
 
     // capture the data-name of character that was clicked and store it in a variable
@@ -185,9 +206,9 @@ $(document).on("click", ".character", function () {
     // using ! (aka logical NOT Operator) in front of a variable with a null value makes it a true statement
     // currentlySelectedCharacter starts null so we use ! to make a true/false statement that can run after a character is selected
     if (!currentlySelectedCharacter) {
-        
+
         currentlySelectedCharacter = characters[name];
-        
+
         // console.log("currentlySelectedCharacter" , currentlySelectedCharacter);
 
         // var object = {key1 : {values}, key2 : {values}, etc}
@@ -214,6 +235,7 @@ $("#attack").on("click", function () {
 
     if ($("#defender").children().length !== 0) {
 
+        // messages
         var attackMessage = "You attacked " + currentDefender.name + " for " + (currentlySelectedCharacter.attack * turnCounter) + " damage.";
         var counterAttackMessage = currentDefender.name + " attacked you  back for " + currentDefender.enemyAttackBack + " damage.";
         renderMessage("clearMessage");
@@ -238,7 +260,7 @@ $("#attack").on("click", function () {
             renderCharacters(currentDefender, "enemyDefeated");
             killCount++;
 
-            if (killCount >= 4) {
+            if (killCount >= combatants.length) {
                 renderMessage("clearMessage");
                 restartGame("You won. Game over!");
             }
