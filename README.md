@@ -2,7 +2,7 @@
 
 ## Take a look
 
-__[Role Playing Game](https://andrewpetersondev.github.io/rpg/)__
+**[Role Playing Game](https://andrewpetersondev.github.io/rpg/)**
 
 ## Technologies Used
 
@@ -64,8 +64,6 @@ The purpose of this project is to practice using jQuery.
 
 ```javascript
 
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Enumerability_and_ownership_of_properties
-
 // The for...in statement iterates over all non-Symbol, enumerable properties of an object.
 
 // var obj = {property1 : value1, property2 : value2, etc}
@@ -75,7 +73,29 @@ The purpose of this project is to practice using jQuery.
 // var characters = {"Jon Snow" : {value}, "Night King" : {value}, etc}
 // meaning that key refers to "Jon Snow", "Night King", etc
 
+// using ! (aka logical NOT Operator) in front of a variable with a null value makes it a true statement
+// currentlySelectedCharacter starts null so we use ! to make a true/false statement that can run after a character is selected
 ```
+
+More Key Concepts
+
+- [JavaScript data types and data structures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures)
+
+- [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy)
+
+- [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy)
+
+- [null](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null)
+
+- [undefined](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined)
+
+- [logical not operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_Operators)
+
+- [enumerability](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Enumerability_and_ownership_of_properties)
+
+- [objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+- [for...in loops]()
 
 ## Status
 
@@ -84,5 +104,3 @@ In Progress.
 ## Sources
 
 This project may have code from class activities, office hours notes, or from seeking help from TAs and teachers.
-
-https://www.youtube.com/watch?v=LlHF7o9IFB4&feature=youtu.be
